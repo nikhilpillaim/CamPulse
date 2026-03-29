@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CamPulse | Amrita University Collaboration</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        [x-cloak] { display: none !important; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #0f0408; color: #f8fafc; overflow: hidden; }
+        .glass { background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(15px); border: 1px solid rgba(255, 215, 0, 0.1); }
+        .amrita-maroon { background-color: #4A041A; }
+        .amrita-gold { color: #FFD700; }
+        .salt-blur { filter: blur(12px); pointer-events: none; user-select: none; opacity: 0.3; }
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-thumb { background: #4A041A; border-radius: 10px; }
+    </style>
+</head>
+<body x-data="{ 
+    page: 'home', 
+    isResident: false, 
+    showVerifyModal: false, 
+    activeHouse: 12 
+}">
+
+    <section x-show="page === 'home'" x-transition class="fixed inset-0 z-[100] bg-[#1a0a0f] flex flex-col items-center justify-center text-center p-6">
+        <div class="mb-6 relative">
+            <div class="absolute inset-0 bg-yellow-500 blur-3xl opacity-20 animate-pulse"></div>
+            <div class="relative w-20 h-24 flex items-center justify-center">
+                <svg viewBox="0 0 24 24" class="w-full h-full fill-yellow-500">
+                    <path d="M12,2C12,2 7,8 7,12C7,14.76 9.24,17 12,17C14.76,17 17,14.76 17,12C17,8 12,2 12,2Z" />
+                </svg>
+            </div>
+        </div>
+        <h1 class="text-5xl md:text-7xl font-black mb-4 tracking-tighter">Cam<span class="amrita-gold">Pulse</span></h1>
+        <p class="text-[10px] tracking-[0.5em] amrita-gold font-bold mb-8 uppercase text-white/60">Amrita Vishwa Vidyapeetham</p>
+        <p class="text-slate-400 max-w-lg mb-12 text-sm leading-relaxed">Own your Space. Find your Tribe.</p>
+        
+        <div class="flex gap-4">
+            <button @click="page = 'dashboard'" class="bg-white text-black px-10 py-4 rounded-2xl font-black hover:bg-yellow-500 transition active:scale-95 shadow-xl shadow-white/5">Enter as Ghost 👻</button>
+            <button @click="showVerifyModal = true" class="glass px-10 py-4 rounded-2xl font-black border-yellow-500/20 hover:bg-white/5 transition">Join as Resident 🏠</button>
+        </div>
+    </section>
+
+    <section x-show="page === 'dashboard'" x-transition x-cloak class="fixed inset-0 flex">
+        
+        <aside class="w-64 bg-[#2D0210] border-r border-white/5 flex flex-col p-6 space-y-10">
+            <div class="flex items-center gap-3 cursor-pointer" @click="page = 'home'">
+                <div class="w-1.5 h-6 bg-yellow-500 rounded-full"></div>
+                <h1 class="text-lg font-black text-white uppercase tracking-tighter">CamPulse</h1>
+            </div>
+
+            <nav class="space-y-6">
+                <div>
+                    <h3 class="text-[9px] font-black text-yellow-500/40 uppercase tracking-widest mb-4 italic">Trending Hot</h3>
+                    <div class="space-y-4">
+                        <div class="group cursor-pointer">
+                            <p class="text-xs font-bold text-slate-300 group-hover:text-yellow-500 transition">#SIH_Team_Finder</p>
+                            <p class="text-[8px] text-slate-600 uppercase">42 Active</p>
+                        </div>
+                        <div class="group cursor-pointer">
+                            <p class="text-xs font-bold text-slate-300 group-hover:text-yellow-500 transition">#Deep_Learning</p>
+                            <p class="text-[8px] text-slate-600 uppercase">12 Houses</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pt-6 border-t border-white/5">
+                    <h3 class="text-[9px] font-black text-yellow-500/40 uppercase tracking-widest mb-4 italic">Collaborations</h3>
+                    <button class="w-full text-left p-3 rounded-xl hover:bg-white/5 text-xs text-slate-400 transition" @click="page = 'makeroom'">
+                        🤝 Make Room
+                    </button>
+                </div>
+            </nav>
+
+            <div class="mt-auto p-4 bg-white/5 rounded-2xl border border-white/10 flex items-center gap-3">
+                <div class="w-8 h-8 rounded-full bg-yellow-500/10 flex items-center justify-center font-black amrita-gold text-[10px]">
+                    <span x-text="isResident ? 'R' : 'G'"></span>
+                </div>
+                <div class="overflow-hidden">
+                    <p class="text-[10px] font-black text-white truncate" x-text="isResident ? 'Verified Resident' : 'Ghost User'"></p>
+                    <p class="text-[8px] text-slate-500 font-bold uppercase tracking-widest">Amrita Univ</p>
+                </div>
+            </div>
+        </aside>
+
+        <main class="flex-1 flex flex-col bg-[#1a0a0f] overflow-y-auto">
+            <header class="p-8 pb-4 flex justify-between items-center sticky top-0 bg-[#1a0a0f]/90 backdrop-blur-md z-10 border-b border-white/5">
+                <h2 class="text-xl font-black italic">Active <span class="amrita-gold leading-none">Houses</span></h2>
+                <div class="flex gap-2">
+                    <input type="text" placeholder="Search #niche..." class="bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-[10px] font-bold text-slate-300 focus:ring-1 focus:ring-yellow-500 outline-none w-40">
+                </div>
+            </header>
+
+            <div class="p-8 space-y-6">
+                <div class="glass p-8 rounded-[2.5rem] border-yellow-500/10 hover:shadow-[0_0_50px_rgba(255,215,0,0.05)] transition duration-500 group">
+                    <div class="flex justify-between items-start mb-6">
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 rounded-2xl bg-yellow-500/10 border border-yellow-500/30 flex items-center justify-center font-black amrita-gold text-lg">#12</div>
+                            <div>
+                                <h4 class="font-black text-white text-lg tracking-tight">The Circuit Breakers</h4>
+                                <div class="flex gap-2 mt-1">
+                                    <span class="text-[8px] bg-white/5 px-2 py-0.5 rounded text-slate-500 font-bold">#ROBOTICS</span>
+                                    <span class="text-[8px] bg-white/5 px-2 py-0.5 rounded text-slate-500 font-bold">#IoT</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <p class="text-slate-300 text-sm mb-6 leading-relaxed italic">"Finalizing sensor logic for the Amrita Inno-Verse. Need a resident to peer-review the encrypted Salted code."</p>
+
+                    <div class="bg-yellow-500/5 border border-yellow-500/10 p-5 rounded-2xl relative" x-data="{ revealed: false }">
+                        <p class="text-[9px] font-black amrita-gold mb-3 tracking-[0.2em] uppercase">🧂 Private House Secret</p>
+                        <div class="relative">
+                            <div :class="(isResident && revealed) ? '' : 'salt-blur'">
+                                <p class="text-xs font-mono text-yellow-100/70 italic">Meeting: Lab 404, 5:00 PM. Code: AMRITA-99-ALPHA</p>
+                            </div>
+                            <template x-if="!isResident || !revealed">
+                                <div class="absolute inset-0 flex items-center justify-center">
+                                    <button @click="isResident ? revealed = true : showVerifyModal = true" 
+                                            class="bg-yellow-500 text-black text-[9px] font-black px-5 py-2 rounded-full shadow-lg shadow-yellow-900/40 active:scale-95 transition">
+                                        <span x-text="isResident ? 'UN-SALT' : 'JOIN RESIDENCY TO VIEW'"></span>
+                                    </button>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+
+                    <div class="mt-8 flex justify-between items-center">
+                        <div class="flex gap-6 text-[10px] font-bold text-slate-500">
+                            <button class="hover:text-yellow-500 transition">▲ 128 Pulse</button>
+                            <span>💬 12 Discussion</span>
+                        </div>
+                        <button @click="isResident ? page = 'makeroom' : showVerifyModal = true" class="bg-white text-black px-5 py-2 rounded-xl text-[10px] font-black hover:bg-yellow-500 transition">
+                            + MAKE ROOM
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <aside class="w-80 bg-[#0f0408] border-l border-white/5 flex flex-col p-6 space-y-8">
+            <h3 class="text-[9px] font-black text-yellow-500/50 uppercase tracking-[0.2em] italic">Hackathons & Events</h3>
+            
+            <div class="space-y-6">
+                <div class="relative rounded-[1.5rem] overflow-hidden group cursor-pointer border border-white/10">
+                    <img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=400" class="h-40 w-full object-cover opacity-40 group-hover:opacity-60 transition duration-500">
+                    <div class="absolute inset-0 p-5 flex flex-col justify-end bg-gradient-to-t from-black">
+                        <span class="text-[8px] bg-yellow-500 text-black px-2 py-0.5 rounded font-black w-fit mb-2">LIVE NOW</span>
+                        <h5 class="text-sm font-black text-white">Smart India Hackathon '26</h5>
+                    </div>
+                </div>
+                
+                <div class="p-5 glass rounded-[1.5rem] border-white/5">
+                    <p class="text-[9px] font-black amrita-gold uppercase mb-1">Upcoming Seminar</p>
+                    <p class="text-xs font-bold text-white leading-snug">Advances in AI-ML with Dr. Swaminathan</p>
+                    <div class="flex justify-between items-center mt-4">
+                        <span class="text-[8px] text-slate-500 font-bold uppercase">Main Library</span>
+                        <span class="text-[8px] text-yellow-500/50 font-bold">14:00 IST</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-auto">
+                <h3 class="text-[9px] font-black text-yellow-500/50 uppercase tracking-[0.2em] mb-4">Resident Syncs</h3>
+                <div class="p-4 bg-white/5 border border-white/10 rounded-2xl flex items-center justify-between">
+                    <p class="text-[10px] font-bold text-slate-400">#SIH_Team_Invite</p>
+                    <button @click="isResident ? page = 'makeroom' : showVerifyModal = true" class="text-[8px] font-black bg-yellow-500 text-black px-3 py-1 rounded-full">OPEN</button>
+                </div>
+            </div>
+        </aside>
+    </section>
+
+    <section x-show="page === 'makeroom'" x-transition x-cloak class="fixed inset-0 z-[110] bg-[#1a0a0f] flex items-center justify-center p-6">
+        <div class="glass max-w-lg w-full p-12 rounded-[3rem] text-center border-yellow-500/20 shadow-2xl">
+            <div class="text-6xl mb-6">🤝</div>
+            <h2 class="text-3xl font-black mb-2">Make Room</h2>
+            <p class="text-slate-400 text-xs mb-8 italic italic italic tracking-wide">Initiating a Private Collaboration Sync with Resident #12</p>
+            
+            <textarea class="w-full bg-white/5 border border-white/10 rounded-2xl p-4 text-xs mb-6 h-40 focus:ring-1 focus:ring-yellow-500 outline-none placeholder:text-slate-700" placeholder="Pitch your project idea or request team roles..."></textarea>
+            
+            <div class="flex gap-4">
+                <button @click="page = 'dashboard'" class="flex-1 py-4 text-[10px] font-black text-slate-500 uppercase">Cancel</button>
+                <button @click="page = 'dashboard'; alert('Sync Request Sent to Resident #12')" class="flex-1 bg-yellow-500 text-black rounded-2xl font-black text-[10px] uppercase tracking-widest hover:scale-105 transition shadow-lg shadow-yellow-900/20">SEND INVITE</button>
+            </div>
+        </div>
+    </section>
+
+    <div x-show="showVerifyModal" x-cloak class="fixed inset-0 z-[120] flex items-center justify-center p-6">
+        <div class="absolute inset-0 bg-black/90 backdrop-blur-md" @click="showVerifyModal = false"></div>
+        <div class="glass max-w-md w-full p-10 rounded-[2.5rem] relative space-y-6 border-yellow-500/20 shadow-2xl">
+            <h2 class="text-2xl font-black italic">Become a <span class="amrita-gold">Resident</span></h2>
+            <p class="text-xs text-slate-400 leading-relaxed">Upload your University ID Card. The House Owners will manually verify your status to keep discussions meaningful.</p>
+            
+            <div class="border-2 border-dashed border-white/10 rounded-3xl p-10 text-center hover:border-yellow-500/40 transition cursor-pointer group bg-white/5">
+                <span class="text-4xl block mb-2 group-hover:scale-110 transition">🪪</span>
+                <p class="text-[9px] font-black text-slate-500 uppercase tracking-[0.2em]">Select ID Image</p>
+            </div>
+
+            <div class="flex items-start gap-3 bg-white/5 p-4 rounded-xl">
+                <input type="checkbox" id="anon" class="mt-1 w-4 h-4 rounded bg-slate-900 border-white/10 text-yellow-600 focus:ring-0">
+                <label for="anon" class="text-[9px] font-bold text-slate-500 italic">Hide my real identity from other Residents (Visible only to House Owners).</label>
+            </div>
+
+            <button @click="isResident = true; showVerifyModal = false; page = 'dashboard'" class="w-full py-4 bg-yellow-500 text-black rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-yellow-400 transition shadow-xl shadow-yellow-900/20">COMPLETE VERIFICATION</button>
+        </div>
+    </div>
+
+</body>
+</html>
